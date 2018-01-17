@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class AppXConfig(AppConfig):
-    name = 'app_x'
+    name = 'site_checker_app'
