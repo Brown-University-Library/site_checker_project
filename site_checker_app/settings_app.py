@@ -3,4 +3,4 @@
 import json, os
 
 
-README_URL = os.environ['site_checker_app__README_URL']
+README_URL = os.environ['SITECHKR__README_URL']

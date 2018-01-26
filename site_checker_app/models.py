@@ -17,20 +17,20 @@ class CheckSite(models.Model):
         ('day', 'Day'),
         ('month', 'Month'),
         )
-    name = models.CharField( max_length=50, help_text='''(i.e. 'Josiah home-page' or 'patron_api')''' )
-    url = models.URLField( max_length=200 )
-    response_expected = models.PositiveIntegerField( editable=False, null=True, blank=True, help_text='''for if you want to test the response code, like '200' ('OK')''' )  # for if you want to test the response code, like '200' ('OK')
-    text_expected = models.TextField()
-    check_frequency_number = models.PositiveIntegerField( help_text='(More-frequent checks increase server load)' )
-    check_frequency_unit = models.CharField( max_length=10, choices=FREQUENCY_UNIT_CHOICES, default='hour' )
-    calculated_seconds = models.PositiveIntegerField( editable=False )  # stores calculated frequence in seconds
-    email_addresses = models.TextField( help_text='(Separate multiple email-addresses with a comma, like aaa@example.com, bbb@example.com)' )
-    email_message = models.TextField( help_text='(Will be included in body of email)' )
-    recent_checked_time = models.DateTimeField( null=True, blank=True, help_text='''(Set automatically)''' )
-    recent_checked_result = models.CharField( max_length=50, blank=True, help_text='''(Set automatically)''' )
-    previous_checked_result = models.CharField( max_length=50, editable=False )
-    pre_previous_checked_result = models.CharField( max_length=50, editable=False )
-    next_check_time = models.DateTimeField( null=True, blank=True, help_text='''(Set automatically)''' )  # stores calculated recent_checked_time + calculated_seconds
+    name = models.CharField( max_length=50, help_text='''(i.e. 'Josiah home-page' or 'patron_api')''', null=True, blank=True )
+    url = models.URLField( max_length=200, null=True, blank=True )
+    response_expected = models.PositiveIntegerField( editable=False, help_text='''for if you want to test the response code, like '200' ('OK')''', null=True, blank=True )  # for if you want to test the response code, like '200' ('OK')
+    text_expected = models.TextField( null=True, blank=True )
+    check_frequency_number = models.PositiveIntegerField( help_text='(More-frequent checks increase server load)', null=True, blank=True )
+    check_frequency_unit = models.CharField( max_length=10, choices=FREQUENCY_UNIT_CHOICES, default='hour', null=True, blank=True )
+    calculated_seconds = models.PositiveIntegerField( editable=False, null=True, blank=True )  # stores calculated frequence in seconds
+    email_addresses = models.TextField( help_text='(Separate multiple email-addresses with a comma, like aaa@example.com, bbb@example.com)', null=True, blank=True )
+    email_message = models.TextField( help_text='(Will be included in body of email)', null=True, blank=True )
+    recent_checked_time = models.DateTimeField( help_text='''(Set automatically)''', null=True, blank=True )
+    recent_checked_result = models.CharField( max_length=50, help_text='''(Set automatically)''', null=True, blank=True )
+    previous_checked_result = models.CharField( max_length=50, editable=False, null=True, blank=True )
+    pre_previous_checked_result = models.CharField( max_length=50, editable=False, null=True, blank=True )
+    next_check_time = models.DateTimeField( help_text='''(Set automatically)''', null=True, blank=True )  # stores calculated recent_checked_time + calculated_seconds
 
     def __unicode__(self):
         return self.name
@@ -39,7 +39,7 @@ class CheckSite(models.Model):
         # fill in recent_checked_time with current date if necessary
         if ( self.recent_checked_time == None ):
             import datetime
-            self.recent_checked_time = datetime.datetime( 2000, 01, 15 )
+            self.recent_checked_time = datetime.datetime( 2000, 1, 15 )
         # update calculated_seconds
         self.calculated_seconds = self.createDeltaSeconds( self.check_frequency_number, self.check_frequency_unit )
         # update next_check_time
