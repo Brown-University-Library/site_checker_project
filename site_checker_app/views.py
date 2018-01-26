@@ -25,3 +25,7 @@ def info( request ):
             'elapsed_time': str( datetime.datetime.now() - start ),
             'message': 'ok' } }
     return HttpResponse( json.dumps(rtrn_dct, sort_keys=True, indent=2), content_type='application/javascript; charset=utf-8' )
+
+
+def show_status( request ):
+    return HttpResponse( 'status coming' )
