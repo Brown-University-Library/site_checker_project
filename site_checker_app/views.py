@@ -2,6 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from . import settings_app
+from .models import CheckSite
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -28,4 +29,8 @@ def info( request ):
 
 
 def show_status( request ):
-    return HttpResponse( 'status coming' )
+    site_data = CheckSite.objects.all().order_by( 'name' )
+    context = {
+        'object_list': site_data
+    }
+    return render( request, 'site_checker_app_templates/checksite_list.html', context )
