@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import datetime, logging
 from . import settings_app
 from .lib import utility_code
 from .models import CheckSite
@@ -66,8 +66,9 @@ class UtilityCodeTests( TestCase ):
     s.email_message = 'not_applicable'
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
     ## check site
-    utility_code.checkSite( s )
-    expected = 'passed_though_non_unicode'
+    utility_code.checkSiteV2( s )
+    # expected = 'passed_though_non_unicode'
+    expected = 'passed'
     result = s.recent_checked_result
     # logs = Log.objects.all()
     # for entry in logs:
@@ -88,7 +89,7 @@ class UtilityCodeTests( TestCase ):
     s.email_message = 'problem with test-page'
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
     ## check site
-    utility_code.checkSite( s )
+    utility_code.checkSiteV2( s )
     expected = 'passed'
     result = s.recent_checked_result
     # logs = Log.objects.all()
@@ -110,7 +111,7 @@ class UtilityCodeTests( TestCase ):
     s.email_message = 'problem with test-page'
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
     ## check site
-    utility_code.checkSite( s )
+    utility_code.checkSiteV2( s )
     expected = 'text_not_found'
     result = s.recent_checked_result
     # logs = Log.objects.all()

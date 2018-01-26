@@ -1,78 +1,12 @@
-from site_check_app import settings_app
+# -*- coding: utf-8 -*-
+
+import logging
+
+from site_checker_app import settings_app
+from site_checker_app.models import CheckSite
 
 
-
-# def checkSite( site ):
-#   '''
-#   - Purpose: check a checkSite entry.
-#   - Called by: checkSites(), which is called from cronscript, and tests.UtilityCodeTests()
-#   '''
-#   try:
-#     ## setup
-#     updateLog( u'- in uc.checkSite(); starting' )
-#     from django.utils.encoding import smart_unicode
-#     import datetime, random, sys, urllib2
-#     log_identifier = 'li_%s' % random.randint(1000,9999)
-#     ## access site
-#     return_val = 'init'
-#     updateLog( u'- in uc.checkSite(); trying site "%s"' % site.url, log_identifier )
-#     try:
-#       response = urllib2.urlopen( site.url )
-#       updateLog( u'- in uc.checkSite(); url response perceived' )
-#     except:
-#       message = makeErrorString()
-#       updateLog( u'- in uc.checkSite(); error accessing url; error is: %s' %  message )
-#       return_val = 'url_not_accessible'
-#       updateLog( u'- in uc.checkSite(); return_val is: "%s"' % return_val )
-#     ## read response
-#     if return_val == 'init':
-#       try:
-#         html = response.read()
-#         updateLog( u'- in uc.checkSite(); html perceived' )
-#       except:
-#         message = makeErrorString()
-#         updateLog( u'- in uc.checkSite(); error reading response; error is: %s' %  message )
-#         return_val = 'unable_to_read_response'
-#         updateLog( u'- in uc.checkSite(); return_val is: "%s"' % return_val )
-#     ## check html
-#     if return_val == 'init':
-#       try:
-#         updateLog( u'- in uc.checkSite(); start of html-to-smart_unicode conversion' )
-#         html2 = smart_unicode( html )
-#         updateLog( u'- in uc.checkSite(); end of html-to-smart_unicode conversion' )
-#         if ( site.text_expected in html2 ):
-#           return_val = 'passed'
-#         else:
-#           return_val = 'text_not_found'
-#         updateLog( u'- in uc.checkSite(); html-check; return_val is: "%s"' % (return_val,) )
-#       except:
-#         updateLog( u'- in uc.checkSite(); html-check; error converting to unicode: %s' % makeErrorString() )
-#         try:
-#           if ( str(site.text_expected) in str(html) ):
-#             return_val = 'passed_though_non_unicode'
-#           else:
-#             return_val = 'text_not_found'
-#           updateLog( u'- in uc.checkSite(); html-string-check; return_val is: "%s"' % return_val )
-#         except:
-#           return_val = 'unable_to_check_html'
-#     ## update site object
-#     updateLog( u'- in uc.checkSite(); site info, *before* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time) )
-#     site.pre_previous_checked_result = site.previous_checked_result
-#     site.previous_checked_result = site.recent_checked_result
-#     site.recent_checked_result = return_val
-#     site.recent_checked_time = datetime.datetime.now()
-#     site.save()
-#     updateLog( u'- in uc.checkSite(); site info, *after* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time,) )
-#     ## return (return_val not read)
-#     return return_val
-#   except:
-#     message = makeErrorString()
-#     updateLog( u'- in uc.checkSite(); main try exception; exception is: %s' %  message )
-#     return_val = 'failure'
-#     updateLog( u'- in uc.checkSite(); return_val is: "%s"' % return_val )
-
-#   # end def checkSite()
-
+log = logging.getLogger(__name__)
 
 
 def checkSiteV2( site ):
@@ -83,59 +17,59 @@ def checkSiteV2( site ):
   try:
     ## setup
     import requests
-    updateLog( u'- in uc.checkSiteV2(); starting' )
+    log.debug( u'- in uc.checkSiteV2(); starting' )
     # from django.utils.encoding import smart_unicode
     import datetime, random, sys
     log_identifier = 'li_%s' % random.randint(1000,9999)
     ## access site
     return_val = u'init'
-    updateLog( u'- in uc.checkSiteV2(); trying site "%s" at "%s"' % (site.name, site.url), log_identifier )
+    log.debug( u'- in uc.checkSiteV2(); trying site "%s" at "%s"' % (site.name, site.url) )
     try:
-      if type(site.url) == str:
-        updateLog( u'- in uc.checkSiteV2(); converted url from str to unicode' )
-        site.url = site.url.decode( u'utf-8', u'replace' )
+      # if type(site.url) == str:
+      #   log.debug( u'- in uc.checkSiteV2(); converted url from str to unicode' )
+      #   site.url = site.url.decode( u'utf-8', u'replace' )
       r = requests.get( site.url, timeout=30, verify=True )
-      updateLog( u'- in uc.checkSiteV2(); url attempted' )
+      log.debug( u'- in uc.checkSiteV2(); url attempted' )
     except:
       message = makeErrorString()
-      updateLog( u'- in uc.checkSiteV2(); error accessing url; error is: %s' %  message )
+      log.debug( u'- in uc.checkSiteV2(); error accessing url; error is: %s' %  message )
       return_val = u'url_not_accessible'
-      updateLog( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
+      log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
     ## read response
     if return_val == u'init':
       try:
         html = r.content.decode( u'utf-8', u'replace' )
-        updateLog( u'- in uc.checkSiteV2(); html perceived' )
+        log.debug( u'- in uc.checkSiteV2(); html perceived' )
       except:
         message = makeErrorString()
-        updateLog( u'- in uc.checkSiteV2(); error reading response; error is: %s' %  message )
+        log.debug( u'- in uc.checkSiteV2(); error reading response; error is: %s' %  message )
         return_val = u'unable_to_read_response'
-        updateLog( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
+        log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
     ## check html
     if return_val == u'init':
-      if type(site.text_expected) == str:
-        site.text_expected = site.text_expected.decode( u'utf-8', u'replace' )
-        updateLog( u'- in uc.checkSiteV2(); converted site.text_expected from str to unicode' )
+      # if type(site.text_expected) == str:
+      #   site.text_expected = site.text_expected.decode( u'utf-8', u'replace' )
+      #   log.debug( u'- in uc.checkSiteV2(); converted site.text_expected from str to unicode' )
       if site.text_expected in html:
         return_val = u'passed'
       else:
         return_val = u'text_not_found'
-      updateLog( u'- in uc.checkSiteV2(); html-check; return_val is: "%s"' % (return_val,) )
+      log.debug( u'- in uc.checkSiteV2(); html-check; return_val is: "%s"' % (return_val,) )
     ## update site object
-    updateLog( u'- in uc.checkSiteV2(); site info, *before* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time) )
+    log.debug( u'- in uc.checkSiteV2(); site info, *before* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time) )
     site.pre_previous_checked_result = site.previous_checked_result
     site.previous_checked_result = site.recent_checked_result
     site.recent_checked_result = return_val
     site.recent_checked_time = datetime.datetime.now()
     site.save()
-    updateLog( u'- in uc.checkSiteV2(); site info, *after* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time,) )
+    log.debug( u'- in uc.checkSiteV2(); site info, *after* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".' % (site.pre_previous_checked_result, site.previous_checked_result, site.recent_checked_result, site.recent_checked_time,) )
     ## return (return_val not read)
     return return_val
   except:
     message = makeErrorString()
-    updateLog( u'- in uc.checkSiteV2(); main try exception; exception is: %s' %  message )
+    log.debug( u'- in uc.checkSiteV2(); main try exception; exception is: %s' %  message )
     return_val = u'failure'
-    updateLog( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
+    log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
 
   # end def checkSiteV2()
 
@@ -147,7 +81,7 @@ def checkSites( query_dict ):
   - Called by: cron script
   '''
   try:
-    updateLog( u'- in uc.checkSites(); --- starting ---' )
+    log.debug( u'- in uc.checkSites(); --- starting ---' )
     for site in query_dict:
       ## check the site
       if settings_app.CHECKSITE_VERSION == 2:
@@ -156,16 +90,16 @@ def checkSites( query_dict ):
         checkSite( site )
       ## send email if necessary
       email_check_result = runEmailCheck( site )
-      updateLog( u'- in uc.checkSites(); email_check_result is: "%s"' % email_check_result )
+      log.debug( u'- in uc.checkSites(); email_check_result is: "%s"' % email_check_result )
       if email_check_result == 'send_failure_email':
         sendFailureEmail( site )
       elif email_check_result == 'send_success_email':
         sendPassedEmail( site )
-    updateLog( u'- in uc.checkSites(); --- checkSites() ending ---' )
+    log.debug( u'- in uc.checkSites(); --- checkSites() ending ---' )
     return 'done'
   except:
     error_message = u'- in uc.checkSites(); error_message: %s' % makeErrorString()
-    updateLog( error_message, message_importance='high' )
+    log.debug( error_message )
     return error_message
 
   # end def checkSites()
@@ -178,14 +112,14 @@ def grabSitesToCheck( submitted_current_date ):
   - Called by: cronscript.py, which then passes the sites list to checkSites()
   '''
   try:
-    from site_check_app.models import CheckSite
-    updateLog( u'- in uc.grabSitesToCheck(); grabbing sites to check' )
+    # from site_check_app.models import CheckSite
+    log.debug( u'- in uc.grabSitesToCheck(); grabbing sites to check' )
     query_set = CheckSite.objects.filter( next_check_time__lte=submitted_current_date )
-    updateLog( u'- in uc.grabSitesToCheck(); number of records grabbed: %s' % (query_set.count(),) )
+    log.debug( u'- in uc.grabSitesToCheck(); number of records grabbed: %s' % (query_set.count(),) )
     return { 'query_set': query_set }
   except:
     error_message = u'- in uc.grabSitesToCheck(); error_message: %s' % makeErrorString()
-    updateLog( error_message, message_importance='high' )
+    log.debug( error_message )
     return error_message
 
 
@@ -212,7 +146,7 @@ def hitSimpleAuth( username, password ):
     return return_dict
   except:
     message = u'- in uc.hitSimpleAuth(); error is: %s' % makeErrorString()
-    updateLog( message, message_importance='high' )
+    log.debug( message )
     return { 'status': 'failure' }
 
   # end def hitSimpleAuth()
@@ -311,15 +245,14 @@ def runEmailCheck( site ):
       return_val = 'send_success_email'
 
     else:
-      updateLog( u'- in uc.runEmailCheck(); UNHANDLED condition met (no email will be sent)', message_importance='high' )
+      log.debug( u'- in uc.runEmailCheck(); UNHANDLED condition met (no email will be sent)' )
       return_val = 'UNHANDLED'
 
-    updateLog( u'- in uc.runEmailCheck(); return val is: %s' % return_val, message_importance='high' )
+    log.debug( u'- in uc.runEmailCheck(); return val is: %s' % return_val )
     return return_val
 
-  except:
-    message = u'- in uc.runEmailCheck(); error is: %s' % makeErrorString()
-    updateLog( message, message_importance='high' )
+  except Exception as e:
+    log.error( 'exception, ```%s```' % str(e) )
     return 'FAILURE'
     # return { 'status': 'failure' }
 
@@ -362,16 +295,16 @@ If authorized, you can edit service automated checking at:
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
     send_mail( subject, message, from_address, to_address_list, fail_silently=False )
-    updateLog( u'- in uc.sendFailureEmail(); failure email sent', message_importance='high' )
+    log.debug( u'- in uc.sendFailureEmail(); failure email sent' )
     return 'failure email sent'
-  except Exception, e:
-    updateLog( u'- in uc.sendFailureEmail(); SocketError is: %s; trying once more' % e, message_importance='high' )
+  except Exception as e:
+    log.debug( u'- in uc.sendFailureEmail(); SocketError is: %s; trying once more' % e )
     try:
       send_mail( subject, message, from_address, to_address_list, fail_silently=False )
-      updateLog( u'- in uc.sendFailureEmail(); guess failure email was sent on second try', message_importance='high' )
+      log.debug( u'- in uc.sendFailureEmail(); guess failure email was sent on second try' )
       return 'failure email sent'
-    except Exception, f:
-      updateLog( u'- in uc.sendFailureEmail(); second Exception is: %s; returning' % f, message_importance='high' )
+    except Exception as f:
+      log.debug( u'- in uc.sendFailureEmail(); second Exception is: %s; returning' % f )
       return 'failure email failed'
 
   # end def sendFailureEmail()
@@ -404,16 +337,16 @@ You can view the current status of all services set up for automated checking at
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
     send_mail( subject, message, from_address, to_address_list, fail_silently=False )
-    updateLog( u'- in uc.sendPassedEmail(); back-online email sent', message_importance='high' )
+    log.debug( u'- in uc.sendPassedEmail(); back-online email sent' )
     return 'back-online email sent'
-  except Exception, e:
-    updateLog( u'- in uc.sendPassedEmail(); Exception is: %s; trying once more' % e, message_importance='high' )
+  except Exception as e:
+    log.debug( u'- in uc.sendPassedEmail(); Exception is: %s; trying once more' % e )
     try:
       send_mail( subject, message, from_address, to_address_list, fail_silently=False )
-      updateLog( u'- in uc.sendPassedEmail(); guess back-online email was sent on second try', message_importance='high' )
+      log.debug( u'- in uc.sendPassedEmail(); guess back-online email was sent on second try' )
       return 'back-online email sent'
-    except Exception, f:
-      updateLog( u'- in uc.sendPassedEmail(); second Exception is: %s; returning' % f, message_importance='high' )
+    except Exception as f:
+      log.debug( u'- in uc.sendPassedEmail(); second Exception is: %s; returning' % f )
       return 'back-online email failed'
 
   # end def sendPassedEmail()
