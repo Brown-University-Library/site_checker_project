@@ -33,7 +33,7 @@ def checkSiteV2( site ):
       log.debug( u'- in uc.checkSiteV2(); url attempted' )
     except:
       message = makeErrorString()
-      log.debug( u'- in uc.checkSiteV2(); error accessing url; error is: %s' %  message )
+      log.error( u'- in uc.checkSiteV2(); error accessing url; error is: %s' %  message )
       return_val = u'url_not_accessible'
       log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
     ## read response
@@ -43,7 +43,7 @@ def checkSiteV2( site ):
         log.debug( u'- in uc.checkSiteV2(); html perceived' )
       except:
         message = makeErrorString()
-        log.debug( u'- in uc.checkSiteV2(); error reading response; error is: %s' %  message )
+        log.error( u'- in uc.checkSiteV2(); error reading response; error is: %s' %  message )
         return_val = u'unable_to_read_response'
         log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
     ## check html
@@ -68,7 +68,7 @@ def checkSiteV2( site ):
     return return_val
   except:
     message = makeErrorString()
-    log.debug( u'- in uc.checkSiteV2(); main try exception; exception is: %s' %  message )
+    log.error( u'- in uc.checkSiteV2(); main try exception; exception is: %s' %  message )
     return_val = u'failure'
     log.debug( u'- in uc.checkSiteV2(); return_val is: "%s"' % return_val )
 
@@ -97,7 +97,7 @@ def checkSites( query_dict ):
     return 'done'
   except:
     error_message = u'- in uc.checkSites(); error_message: %s' % makeErrorString()
-    log.debug( error_message )
+    log.error( error_message )
     return error_message
 
   # end def checkSites()
@@ -117,7 +117,7 @@ def grabSitesToCheck( submitted_current_date ):
     return { 'query_set': query_set }
   except:
     error_message = u'- in uc.grabSitesToCheck(); error_message: %s' % makeErrorString()
-    log.debug( error_message )
+    log.error( error_message )
     return error_message
 
 
@@ -144,7 +144,7 @@ def hitSimpleAuth( username, password ):
     return return_dict
   except:
     message = u'- in uc.hitSimpleAuth(); error is: %s' % makeErrorString()
-    log.debug( message )
+    log.error( message )
     return { 'status': 'failure' }
 
   # end def hitSimpleAuth()
@@ -288,7 +288,7 @@ If authorized, you can edit service automated checking at:
         site.url,
         site.text_expected,
         site.email_message,
-        settings_app.EMAIL_ADMIN_URL )
+        reverse( 'admin_login_url' ) )
 
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
@@ -296,13 +296,13 @@ If authorized, you can edit service automated checking at:
     log.debug( u'- in uc.sendFailureEmail(); failure email sent' )
     return 'failure email sent'
   except Exception as e:
-    log.debug( u'- in uc.sendFailureEmail(); SocketError is: %s; trying once more' % e )
+    log.error( u'- in uc.sendFailureEmail(); SocketError is: %s; trying once more' % e )
     try:
       send_mail( subject, message, from_address, to_address_list, fail_silently=False )
       log.debug( u'- in uc.sendFailureEmail(); guess failure email was sent on second try' )
       return 'failure email sent'
     except Exception as f:
-      log.debug( u'- in uc.sendFailureEmail(); second Exception is: %s; returning' % f )
+      log.error( u'- in uc.sendFailureEmail(); second Exception is: %s; returning' % f )
       return 'failure email failed'
 
   # end def sendFailureEmail()
