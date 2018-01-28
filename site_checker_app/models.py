@@ -61,7 +61,7 @@ class CheckSite(models.Model):
         if ( self.recent_checked_result == 'passed' ):
             time_delta = normal_time_delta
         else: # on failure check at least every five minutes
-            default_error_recheck_delta = datetime.timedelta( minutes = 2 )
+            default_error_recheck_delta = datetime.timedelta( minutes=settings_app.DEFAULT_RECHECK_MINUTES )
             if ( normal_time_delta < default_error_recheck_delta ):
                 time_delta = normal_time_delta
             else:
