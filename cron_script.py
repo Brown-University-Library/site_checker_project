@@ -3,6 +3,12 @@
 """
 Determines which sites are ready to be checked, and checks them
 Called by: crontab
+
+Suggested calling mechanism from crontab...
+
+## (crontab reminder: MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK COMMAND)
+* * * * * cd /path/to/site_checker_project/; source ../venv/bin/activate > /dev/null; ../venv/bin/python3 ./cron_script.py
+
 """
 
 import datetime, logging, os
@@ -20,7 +26,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s', datefmt='%d/%b/%Y %H:%M:%S' )
 log = logging.getLogger(__name__)
-
 
 
 def run_code():
