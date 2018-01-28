@@ -2,6 +2,7 @@
 
 import logging
 
+from django.core.urlresolvers import reverse
 from site_checker_app import settings_app
 from site_checker_app.models import CheckSite
 
@@ -329,7 +330,7 @@ You can view the current status of all services set up for automated checking at
 ''' % ( site.name,
         site.check_frequency_number,
         site.check_frequency_unit,
-        settings_app.EMAIL_PUBLIC_URL )
+        reverse( 'show_status_url' ) )
 
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
@@ -337,13 +338,13 @@ You can view the current status of all services set up for automated checking at
     log.debug( u'- in uc.sendPassedEmail(); back-online email sent' )
     return 'back-online email sent'
   except Exception as e:
-    log.debug( u'- in uc.sendPassedEmail(); Exception is: %s; trying once more' % e )
+    log.error( u'- in uc.sendPassedEmail(); Exception is: %s; trying once more' % e )
     try:
       send_mail( subject, message, from_address, to_address_list, fail_silently=False )
       log.debug( u'- in uc.sendPassedEmail(); guess back-online email was sent on second try' )
       return 'back-online email sent'
     except Exception as f:
-      log.debug( u'- in uc.sendPassedEmail(); second Exception is: %s; returning' % f )
+      log.error( u'- in uc.sendPassedEmail(); second Exception is: %s; returning' % f )
       return 'back-online email failed'
 
   # end def sendPassedEmail()
