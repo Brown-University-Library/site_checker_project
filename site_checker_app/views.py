@@ -29,8 +29,14 @@ def info( request ):
 
 
 def show_status( request ):
+    """ Displays public status page. """
     site_data = CheckSite.objects.all().order_by( 'name' )
     context = {
         'object_list': site_data
     }
     return render( request, 'site_checker_app_templates/checksite_list.html', context )
+
+
+def login( request ):
+    """ Handles shib authNZ & redirects to admin. """
+    return HttpResponse( 'login coming' )
