@@ -84,10 +84,7 @@ def checkSites( query_dict ):
     log.debug( u'- in uc.checkSites(); --- starting ---' )
     for site in query_dict:
       ## check the site
-      if settings_app.CHECKSITE_VERSION == 2:
-        checkSiteV2( site )
-      else:
-        checkSite( site )
+      checkSiteV2( site )
       ## send email if necessary
       email_check_result = runEmailCheck( site )
       log.debug( u'- in uc.checkSites(); email_check_result is: "%s"' % email_check_result )
