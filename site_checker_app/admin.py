@@ -6,7 +6,7 @@ from site_checker_app.models import CheckSite
 
 class CheckSiteAdmin( admin.ModelAdmin ):
     save_on_top = True
-    list_display = [ 'name', 'partial_url', 'text_expected', 'recent_checked_time', 'recent_checked_result', 'next_check_time' ]
+    list_display = [ 'name', 'partial_url', 'partial_text', 'recent_checked_time', 'recent_checked_result', 'next_check_time' ]
     ordering = [ 'name' ]
 
     def partial_url(self, obj):
@@ -18,6 +18,16 @@ class CheckSiteAdmin( admin.ModelAdmin ):
             p_url = '%s...' % obj.url[0:47]
         return p_url
     partial_url.short_description = 'url'
+
+    def partial_text(self, obj):
+        """ Specifies appearance of text_expected in list_display. """
+        expected = ''
+        if len(obj.text_expected) <= 50:
+            expected = obj.text_expected
+        else:
+            expected = '%s...' % obj.text_expected[0:47]
+        return expected
+    partial_text.short_description = 'text_expected'
 
 
 admin.site.register( CheckSite, CheckSiteAdmin )
