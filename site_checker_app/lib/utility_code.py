@@ -296,7 +296,6 @@ The "%s" service failed two consecutive automated checks a few minutes apart. Ch
 
 You can view the current status of all services set up for automated checking at:
 <%s>
-<http://library.brown.edu/site_checker/status/>
 
 If authorized, you can edit service automated checking at:
 <%s>
@@ -324,21 +323,7 @@ def sendPassedEmail( site ):
   try:
     from django.core.mail import send_mail
     subject = 'Service-Status alert: "%s" is ok now' % ( site.name, )
-
-    message = '''The service "%s" appears to be up.
-
-Automated checking will continue at the specified values of every-%s-%s(s).
-
-You can view the current status of all services set up for automated checking at:
-
-%s
-
-[end]
-''' % ( site.name,
-        site.check_frequency_number,
-        site.check_frequency_unit,
-        reverse( 'show_status_url' ) )
-
+    message = build_passed_email_message( site.name, site.check_frequency_number, site.check_frequency_unit )
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
     send_mail( subject, message, from_address, to_address_list, fail_silently=False )
@@ -355,3 +340,27 @@ You can view the current status of all services set up for automated checking at
       return 'back-online email failed'
 
   # end def sendPassedEmail()
+
+
+def build_passed_email_message( name, check_frequency_number, check_frequency_unit ):
+    """ Constructs failure message.
+        Called by sendPassedEmail() """
+    message = '''The service "%s" appears to be up.
+
+Automated checking will continue at the specified values of every-%s-%s(s).
+
+You can view the current status of all services set up for automated checking at:
+<%s>
+
+If authorized, you can edit service automated checking at:
+<%s>
+
+[end]
+''' % ( name,
+        check_frequency_number,
+        check_frequency_unit,
+        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('show_status_url')),
+        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url'))
+        )
+    log.debug( 'success message, ```%s```' % message )
+    return message
