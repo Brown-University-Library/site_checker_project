@@ -216,8 +216,8 @@ def runEmailCheck( site ):
       ):  # on repeated failures -- another expected common case
       return_val = 'send_no_email'
     elif (
-      site.previous_checked_result == ''
-      ):  # on initial record-creation, whether first check is successful or not
+      # site.previous_checked_result == ''):  # on initial record-creation, whether first check is successful or not
+      site.previous_checked_result == 'init'):  # on initial record-creation, whether first check is successful or not
       return_val = 'send_no_email'
     elif (
       'passed' in site.recent_checked_result and
@@ -230,7 +230,7 @@ def runEmailCheck( site ):
     elif (
       'passed' not in site.recent_checked_result and
       'passed' not in site.previous_checked_result and
-      ('passed' in site.pre_previous_checked_result or site.pre_previous_checked_result == '')
+      ('passed' in site.pre_previous_checked_result or site.pre_previous_checked_result == 'init')
       ):
       return_val = 'send_failure_email'
 

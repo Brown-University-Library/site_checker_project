@@ -37,16 +37,35 @@ class CheckSite(models.Model):
         return self.name
 
     def save(self):
-        # fill in recent_checked_time with current date if necessary
+        ## fill in recent_checked_time with current date if necessary
         if ( self.recent_checked_time == None ):
             import datetime
             self.recent_checked_time = datetime.datetime( 2000, 1, 15 )
-        # update calculated_seconds
+        ## update calculated_seconds
         self.calculated_seconds = self.createDeltaSeconds( self.check_frequency_number, self.check_frequency_unit )
-        # update next_check_time
+        ## update next_check_time
         self.next_check_time = self.createDeltaTime( self.recent_checked_time, self.calculated_seconds )
-        # call the real save method
+        ## handle empty results on initial save
+        if self.recent_checked_result is None:
+            self.recent_checked_result = 'init'
+        if self.previous_checked_result is None:
+            self.previous_checked_result = 'init'
+        if self.pre_previous_checked_result is None:
+            self.pre_previous_checked_result = 'init'
+        ## call the real save method
         super(CheckSite, self).save()
+
+    # def save(self):
+    #     ## fill in recent_checked_time with current date if necessary
+    #     if ( self.recent_checked_time == None ):
+    #         import datetime
+    #         self.recent_checked_time = datetime.datetime( 2000, 1, 15 )
+    #     ## update calculated_seconds
+    #     self.calculated_seconds = self.createDeltaSeconds( self.check_frequency_number, self.check_frequency_unit )
+    #     ## update next_check_time
+    #     self.next_check_time = self.createDeltaTime( self.recent_checked_time, self.calculated_seconds )
+    #     ## call the real save method
+    #     super(CheckSite, self).save()
 
     def createDeltaSeconds( self, frequency_integer, unit_string ):
         minute_value = 60
