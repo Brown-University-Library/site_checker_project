@@ -264,8 +264,8 @@ def sendFailureEmail( site ):
   '''
   try:
     from django.core.mail import send_mail
-    admin_login_url = '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url')
-    subject = 'Service-Status alert: "%s" problem' % ( site.name, )
+    admin_login_url = '%s%s' % ( settings_app.CHECKER_URL_ROOT, reverse('admin_login_url') )
+    subject = 'Service-Status alert: "%s" problem' % ( site.name )
     message = build_failure_email_message( site.name, site.check_frequency_number, site.check_frequency_unit, site.url, site.text_expected, site.email_message, admin_login_url )
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
@@ -308,8 +308,8 @@ If authorized, you can edit service automated checking at:
         site_url,
         text_expected,
         email_message,
-        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('show_status_url')),
-        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url'))
+        '%s%s' % (settings_app.CHECKER_URL_ROOT, reverse('show_status_url')),
+        '%s%s' % (settings_app.CHECKER_URL_ROOT, reverse('admin_login_url'))
         )
     log.debug( 'failure message, ```%s```' % message )
     return message
@@ -359,8 +359,8 @@ If authorized, you can edit service automated checking at:
 ''' % ( name,
         check_frequency_number,
         check_frequency_unit,
-        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('show_status_url')),
-        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url'))
+        '%s%s' % (settings_app.CHECKER_URL_ROOT, reverse('show_status_url')),
+        '%s%s' % (settings_app.CHECKER_URL_ROOT, reverse('admin_login_url'))
         )
     log.debug( 'success message, ```%s```' % message )
     return message
