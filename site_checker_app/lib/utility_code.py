@@ -295,19 +295,21 @@ The "%s" service failed two consecutive automated checks a few minutes apart. Ch
 - Specified failure message: "%s"
 
 You can view the current status of all services set up for automated checking at:
+<%s>
 <http://library.brown.edu/site_checker/status/>
 
 If authorized, you can edit service automated checking at:
 <%s>
 
 [end]
-''' % ( site.name,
-        site.name,
-        site.check_frequency_number,
-        site.check_frequency_unit,
-        site.url,
-        site.text_expected,
-        site.email_message,
+''' % ( name,
+        name,
+        check_frequency_number,
+        check_frequency_unit,
+        site_url,
+        text_expected,
+        email_message,
+        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('show_status_url')),
         '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url'))
         )
     log.debug( 'failure message, ```%s```' % message )
