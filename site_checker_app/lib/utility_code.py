@@ -254,7 +254,7 @@ def runEmailCheck( site ):
     return 'FAILURE'
     # return { 'status': 'failure' }
 
-  # end def runEmailCheck()
+  ## end def runEmailCheck()
 
 
 def sendFailureEmail( site ):
@@ -264,32 +264,9 @@ def sendFailureEmail( site ):
   '''
   try:
     from django.core.mail import send_mail
+    admin_login_url = '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url')
     subject = 'Service-Status alert: "%s" problem' % ( site.name, )
-
-    message = '''The service "%s" appears to be down.
-
-The "%s" service failed two consecutive automated checks a few minutes apart. Checks will continue every few minutes while the failures persist, but you will only be emailed again when the automated check succeeds. Once the automated check succeeds, the check-frequency will return to the specified values of every-%s-%s(s).
-
-- Url checked: "%s"
-- Text expected: "%s"
-- Specified failure message: "%s"
-
-You can view the current status of all services set up for automated checking at:
-<http://library.brown.edu/services/site_checker/status/>
-
-If authorized, you can edit service automated checking at:
-<%s>
-
-[end]
-''' % ( site.name,
-        site.name,
-        site.check_frequency_number,
-        site.check_frequency_unit,
-        site.url,
-        site.text_expected,
-        site.email_message,
-        reverse( 'admin_login_url' ) )
-
+    message = build_failure_email_message( site.name, site.check_frequency_number, site.check_frequency_unit, site.url, site.text_expected, site.email_message, admin_login_url )
     from_address = settings_app.EMAIL_FROM_ADDRESS
     to_address_list = parseEmailAddresses( site.email_addresses )
     send_mail( subject, message, from_address, to_address_list, fail_silently=False )
@@ -305,8 +282,36 @@ If authorized, you can edit service automated checking at:
       log.error( u'- in uc.sendFailureEmail(); second Exception is: %s; returning' % f )
       return 'failure email failed'
 
-  # end def sendFailureEmail()
 
+def build_failure_email_message( name, check_frequency_number, check_frequency_unit, site_url, text_expected, email_message, admin_login_url ):
+    """ Constructs failure message.
+        Called by sendFailureEmail() """
+    message = '''The service "%s" appears to be down.
+
+The "%s" service failed two consecutive automated checks a few minutes apart. Checks will continue every few minutes while the failures persist, but you will only be emailed again when the automated check succeeds. Once the automated check succeeds, the check-frequency will return to the specified values of every-%s-%s(s).
+
+- Url checked: "%s"
+- Text expected: "%s"
+- Specified failure message: "%s"
+
+You can view the current status of all services set up for automated checking at:
+<http://library.brown.edu/site_checker/status/>
+
+If authorized, you can edit service automated checking at:
+<%s>
+
+[end]
+''' % ( site.name,
+        site.name,
+        site.check_frequency_number,
+        site.check_frequency_unit,
+        site.url,
+        site.text_expected,
+        site.email_message,
+        '%s%s' % (settings_app.SITECHKR__URL_ROOT, reverse('admin_login_url'))
+        )
+    log.debug( 'failure message, ```%s```' % message )
+    return message
 
 
 def sendPassedEmail( site ):
