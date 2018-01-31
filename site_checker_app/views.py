@@ -2,6 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from . import settings_app
+from .lib.shib_auth import shib_login  # decorator
 from .models import CheckSite
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
@@ -37,8 +38,9 @@ def show_status( request ):
     return render( request, 'site_checker_app_templates/checksite_list.html', context )
 
 
+@shib_login
 def login( request ):
     """ Handles shib authNZ & redirects to admin. """
     admin_url = '%s%s' % ( settings_app.CHECKER_URL_ROOT, reverse('admin:site_checker_app_checksite_changelist') )
     log.debug( 'admin_url, ```%s```' % admin_url )
-    return HttpResponse( 'login coming' )
+    return HttpResponseRedirect( admin_url )
