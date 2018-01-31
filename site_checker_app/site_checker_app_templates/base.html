@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block page_title %}
-        easyrequest_hay_webapp - Brown University Library
+        sitechecker &mdash; info
         {% endblock page_title %}
     </title>
     <link href="{% static 'css/all_search_css_pretty-print.css' %}" rel="stylesheet" type="text/css"/>
@@ -72,11 +72,10 @@
         <div class="collapse navbar-collapse" id="user-util-collapse">
             <div class="navbar-right">
                 <ul class="nav navbar-nav">
-                    <li> <a href="{% url 'info_url' %}" rel="tooltip" title="about this webapp">Info</a> </li>
-                    <li> <a href="https://github.com/brown-University-Library" rel="tooltip" title="github-brown">GitHub-Brown</a> </li>
-                    <li> <a href="https://bitbucket.org/bul/" rel="tooltip" title="bitbucket-brown">BitBucket-Brown</a> </li>
-                    <li> <a href="https://github.com/birkin/bul_cbp_project/issues" rel="tooltip" title="issues">Feedback</a> </li>
-                    <li> <a href="https://github.com/birkin/bul_cbp_project" rel="tooltip" title="code">Code</a> </li>
+                    <li> <a href="https://github.com/birkin/site_checker_project/blob/master/README.md#info" rel="tooltip" title="about this webapp">Info</a> </li>
+                    <li> <a href="https://github.com/birkin/site_checker_project/issues" rel="tooltip" title="issues">Feedback</a> </li>
+                    <li> <a href="https://github.com/birkin/site_checker_project" rel="tooltip" title="code">Code</a> </li>
+                    <li> <a href="{% url 'admin_login_url' %}" rel="tooltip" title="admin">Admin</a> </li>
                 </ul>
             </div>
         </div>
