@@ -2,58 +2,79 @@
 
 
 {% block page_title %}
-cbp project-info
+sitechecker &mdash; status
 {% endblock page_title %}
 
 
 {% block extra_css %}
 <style type="text/css">
-    div#info_text {
-        margin-top: 2em;
-    }
-    pre#info {
-        margin:0 auto;
-        width: 80%;
-    }
-    img#score {
-        margin-top: .5em;
-    }
-    ul {
-        margin-top: 1em;
-    }
-    span.no {
-        font-weight: bold;
-        color: red;
-    }
+table {
+    width: 80%;
+    border-width: 1px 1px 1px 1px;
+    border-spacing: 2px 2px;
+    border-style: solid solid solid solid;
+    border-color: gray gray gray gray;
+    border-collapse: collapse;
+    background-color: white;
+    /*margin-left:13px;*/
+    /*margin-right:5px;*/
+    margin-left:auto;
+    margin-right:auto;
+}
+th {
+    border-width: 1px 1px 1px 1px;
+    padding: 2px 2px 2px 2px;
+    border-style: dashed dashed dashed dashed;
+    border-color: gray gray gray gray;
+    background-color: white;
+    -moz-border-radius: 0px 0px 0px 0px;
+    vertical-align:middle;
+}
+td {
+    border-width: 1px 1px 1px 1px;
+    padding: 3px 3px 3px 3px;
+    border-style: dashed dashed dashed dashed;
+    border-color: gray gray gray gray;
+    background-color: white;
+    -moz-border-radius: 0px 0px 0px 0px;
+}
+span.passed {
+    color: green;
+}
+span.text_not_found {
+    color: red;
+}
+span.url_not_accessible {
+    color: red;
+}
 </style>
 {% endblock extra_css %}
 
 
 {% block content %}
 
-<h1>code-best-practices &mdash; project-info</h1>
+<h1>sitechecker &mdash; service-status</h1>
 
-<div id="info_text">
+<table>
 
-    <h2><strong>project: {{ project_name }} </strong></h2>
+    <tr>
+        <th><strong>Service</strong></th>
+        <th>Status</th>
+        <th>&nbsp;Frequency&nbsp;</a></th>
+        <th>Last Checked</th>
+    </tr>
 
-     <p><img id="score" src="{{ score_image_url }}" alt="score-image"></img></p>
+    <tr><p>&nbsp;</p></tr>
 
-    <ul>
-        <li><p>code is versioned: <span {% if code_versioned == "no" %}class="no"{% endif %}">{{ code_versioned }}</span></p></li>
-        <li><p>has public code-url: <span {% if has_url == "no" %}class="no"{% endif %}>{{ has_url }}</span></p></li>
-        <li><p>is responsive: <span {% if responsive == "no" %}class="no"{% endif %}>{{ responsive }}</span></p></li>
-        <li><p>contains lightweight data-reporting: <span {% if reports == "no" %}class="no"{% endif %}>{{ reports }}</span></p></li>
-        <li><p>accessability checked: <span {% if accessability == "no" %}class="no"{% endif %}">{{ accessability }}</span></p></li>
-        <li><p>data is discoverable: <span {% if discoverable == "no" %}class="no"{% endif %}>{{ discoverable }}</span></p></li>
-        <li><p>has site-checker entry: <span {% if has_sitechecker_entry == "no" %}class="no"{% endif %}>{{ has_sitechecker_entry }}</span></p></li>
-        <li><p>contact: {{ contact }}</p></li>
-    </ul>
+    {% for object in object_list %}
+    <tr>
+        <td>&nbsp;{{object.name}}&nbsp;</td>
+        <td>&nbsp;<span class="{{object.recent_checked_result}}">{{object.recent_checked_result}}</span>&nbsp;</td>
+        <td>&nbsp;{{object.check_frequency_number}} {{object.check_frequency_unit}}s&nbsp;</td>
+        <td>{{object.recent_checked_time}}</td>
+    </tr>
+    {% endfor %}
 
-    <hr/>
-    <p>developers, <a href="{{ admn }}">log in</a> to see additional info and update this or other project-entries</p>
-
-
-</div>  <!-- end <div id="info_text"> -->
+</table>
 
 {% endblock content %}
