@@ -38,9 +38,26 @@ def show_status( request ):
     return render( request, 'site_checker_app_templates/checksite_list.html', context )
 
 
+def show_status_old( request ):
+    """ Displays public status page. """
+    site_data = CheckSite.objects.all().order_by( 'name' )
+    context = {
+        'object_list': site_data
+    }
+    return render( request, 'site_checker_app_templates/checksite_list_old.html', context )
+
+
 @shib_login
 def login( request ):
     """ Handles shib authNZ & redirects to admin. """
     admin_url = reverse( 'admin:site_checker_app_checksite_changelist' )
     log.debug( 'admin_url, ```%s```' % admin_url )
     return HttpResponseRedirect( admin_url )
+
+
+def bul_search( request ):
+    """ Triggered by user entering search term into banner-search-field.
+        Redirects query to search.library.brown.edu """
+    log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
+    redirect_url = 'https://search.library.brown.edu?%s' % request.META['QUERY_STRING']
+    return HttpResponseRedirect( redirect_url )
