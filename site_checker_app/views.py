@@ -39,4 +39,6 @@ def show_status( request ):
 
 def login( request ):
     """ Handles shib authNZ & redirects to admin. """
+    admin_url = '%s%s' % ( settings_app.CHECKER_URL_ROOT, reverse('admin:site_checker_app_checksite_changelist') )
+    log.debug( 'admin_url, ```%s```' % admin_url )
     return HttpResponse( 'login coming' )
