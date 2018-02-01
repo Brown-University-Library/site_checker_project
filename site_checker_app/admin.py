@@ -8,6 +8,7 @@ class CheckSiteAdmin( admin.ModelAdmin ):
     save_on_top = True
     list_display = [ 'name', 'partial_url', 'partial_text', 'recent_checked_time', 'recent_checked_result', 'next_check_time' ]
     ordering = [ 'name' ]
+    search_fields = [ 'name', 'url', 'email_addresses' ]
 
     def partial_url(self, obj):
         """ Specifies appearance of url in list_display. """
