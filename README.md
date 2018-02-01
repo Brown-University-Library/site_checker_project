@@ -1,4 +1,4 @@
-[![BUL Code Best-Practices](https://library.brown.edu/bul_cbp/project_image/site-checker/)](https://library.brown.edu/bul_cbp/project_info/site-checker/)
+[![BUL Code Best-Practices](https://library.brown.edu/good_code/project_image/site-checker/)](https://library.brown.edu/good_code/project_info/site-checker/)
 
 ##### Overview
 
