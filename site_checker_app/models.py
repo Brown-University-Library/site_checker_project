@@ -24,7 +24,7 @@ class CheckSite(models.Model):
     text_expected = models.TextField( help_text='(Text expected somewhere in the response html)', null=True, blank=True )
     check_frequency_number = models.PositiveIntegerField( help_text='(More-frequent checks increase server load)', null=True, blank=True )
     check_frequency_unit = models.CharField( max_length=10, choices=FREQUENCY_UNIT_CHOICES, default='hour', null=True, blank=True )
-    calculated_seconds = models.PositiveIntegerField( help_text='(Seconds until next check; set automatically on save)', editable=False, null=True, blank=True )  # stores calculated frequence in seconds
+    calculated_seconds = models.PositiveIntegerField( help_text='(Seconds until next check; set automatically on save, and when script runs)', editable=False, null=True, blank=True )  # stores calculated frequence in seconds
     email_addresses = models.TextField( help_text='(Separate multiple email-addresses with a comma, like aaa@example.com, bbb@example.com)', null=True, blank=True )
     email_message = models.TextField( help_text='(Will be included in body of email)', null=True, blank=True )
     recent_checked_time = models.DateTimeField( help_text='(Set automatically when script runs)', null=True, blank=True )
