@@ -9,6 +9,39 @@ class CheckSiteAdmin( admin.ModelAdmin ):
     list_display = [ 'name', 'partial_url', 'partial_text', 'recent_checked_time', 'recent_checked_result', 'next_check_time' ]
     ordering = [ 'name' ]
     search_fields = [ 'name', 'url', 'email_addresses' ]
+    readonly_fields = (
+        'calculated_seconds',
+        'recent_checked_time',
+        'recent_checked_result',
+        'previous_checked_result',
+        'pre_previous_checked_result',
+        'next_check_time',
+        )
+    fieldsets = (
+        ('editable', {
+            'classes': ('wide',),
+            'fields': (
+                'name',
+                'url',
+                'text_expected',
+                'check_frequency_number',
+                'check_frequency_unit',
+                'email_addresses',
+                'email_message',
+            )
+        }),
+        ('not-editable', {
+            'classes': ('wide',),
+            'fields': (
+                'calculated_seconds',
+                'recent_checked_time',
+                'next_check_time',
+                'recent_checked_result',
+                'previous_checked_result',
+                'pre_previous_checked_result',
+            ),
+        }),
+    )
 
     def partial_url(self, obj):
         """ Specifies appearance of url in list_display. """
@@ -29,6 +62,8 @@ class CheckSiteAdmin( admin.ModelAdmin ):
             expected = '%s...' % obj.text_expected[0:47]
         return expected
     partial_text.short_description = 'text_expected'
+
+    ## end class CheckSiteAdmin()
 
 
 admin.site.register( CheckSite, CheckSiteAdmin )
