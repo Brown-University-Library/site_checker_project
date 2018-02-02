@@ -17,16 +17,16 @@ class RootUrlTest( TestCase ):
     def test_root_url_no_slash(self):
         """ Checks '/root_url'. """
         response = self.client.get( '' )  # project root part of url is assumed
-        self.assertEqual( 302, response.status_code )  # permanent redirect
+        self.assertEqual( 302, response.status_code )  # non-permanent redirect
         redirect_url = response._headers['location'][1]
-        self.assertEqual(  '/info/', redirect_url )
+        self.assertEqual(  '/status/', redirect_url )
 
     def test_root_url_slash(self):
         """ Checks '/root_url/'. """
         response = self.client.get( '/' )  # project root part of url is assumed
         self.assertEqual( 302, response.status_code )  # permanent redirect
         redirect_url = response._headers['location'][1]
-        self.assertEqual(  '/info/', redirect_url )
+        self.assertEqual(  '/status/', redirect_url )
 
     # end class RootUrlTest()
 
@@ -219,7 +219,7 @@ class UtilityCodeTests( TestCase ):
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
     s.recent_checked_result = 'text_not_found'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
     s.previous_checked_result = 'text_not_found'
-    s.pre_previous_checked_result = ''
+    s.pre_previous_checked_result = 'init'
     ## run check
     expected = 'send_failure_email'
     result =  utility_code.runEmailCheck( s )
@@ -241,9 +241,9 @@ class UtilityCodeTests( TestCase ):
     s.email_addresses = settings_app.TEST_EMAIL
     s.email_message = 'irrelevant -- but it would be some kind of "failure" message'
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
-    s.recent_checked_result = ''  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
-    s.previous_checked_result = ''
-    s.pre_previous_checked_result = ''
+    s.recent_checked_result = 'init'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
+    s.previous_checked_result = 'init'
+    s.pre_previous_checked_result = 'init'
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
@@ -322,8 +322,8 @@ class UtilityCodeTests( TestCase ):
     s.email_message = 'irrelevant -- but it would be some kind of "failure" message'
     s.recent_checked_time = datetime.datetime( 2007, 1, 15 )  # 2007-01-15, 00:00am
     s.recent_checked_result = 'text_not_found'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
-    s.previous_checked_result = ''
-    s.pre_previous_checked_result = ''
+    s.previous_checked_result = 'init'
+    s.pre_previous_checked_result = 'init'
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
