@@ -32,23 +32,9 @@ class RootUrlTest( TestCase ):
 
 
 
-
-
-
-
-
-
-
-
-
-
-# from django.test import TestCase
-# from site_check_app import settings_app, utility_code
-# from site_check_app.models import CheckSite, Log
-# import datetime
-
-
 class UtilityCodeTests( TestCase ):
+  """ Checks lib.utility_code.py functions.
+        TODO: refactor functions into appropriate modules/classes where applicable, and update tests. """
 
 
   ## checkSite()
@@ -70,11 +56,7 @@ class UtilityCodeTests( TestCase ):
     # expected = 'passed_though_non_unicode'
     expected = 'passed'
     result = s.recent_checked_result
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_checkSite_funkyPdf()
 
 
   def test_checkSite_siteExistsGoodHtml(self):
@@ -92,11 +74,7 @@ class UtilityCodeTests( TestCase ):
     utility_code.checkSiteV2( s )
     expected = 'passed'
     result = s.recent_checked_result
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_checkSite_siteExistsGoodHtml()
 
 
   def test_checkSite_textNotFound(self):
@@ -114,11 +92,7 @@ class UtilityCodeTests( TestCase ):
     utility_code.checkSiteV2( s )
     expected = 'text_not_found'
     result = s.recent_checked_result
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_checkSite_textNotFound()
 
 
   # def test_checkSite_urlNotAccessible(self):
@@ -160,7 +134,6 @@ class UtilityCodeTests( TestCase ):
     expected = 0
     result = query_set.count()
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_grabSitesToCheck_noRetrieval()
 
 
   def test_grabSitesToCheck_retrieval(self):
@@ -184,7 +157,6 @@ class UtilityCodeTests( TestCase ):
     expected = 1
     result = query_set.count()
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_grabSitesToCheck_retrieval()
 
 
   ## parseEmailAddresses()
@@ -195,7 +167,6 @@ class UtilityCodeTests( TestCase ):
     expected = ['aaa@test.com']
     result = utility_code.parseEmailAddresses( field_string )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_parseEmailAddresses_single()
 
 
   def test_parseEmailAddresses_multipleViaComma(self):
@@ -203,7 +174,6 @@ class UtilityCodeTests( TestCase ):
     expected = ['aaa@test.com', 'bbb@test.com']
     result = utility_code.parseEmailAddresses( field_string )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_parseEmailAddresses_multipleViaComma()
 
 
   def test_parseEmailAddresses_multipleViaCommaAndSpace(self):
@@ -211,7 +181,6 @@ class UtilityCodeTests( TestCase ):
     expected = ['aaa@test.com', 'bbb@test.com']
     result = utility_code.parseEmailAddresses( field_string )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-    # end def test_parseEmailAddresses_multipleViaCommaAndSpace()
 
 
   ## runEmailCheck()
@@ -234,11 +203,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_failure_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_failureEmailAfterTwoFailures()
 
 
   def test_runEmailCheck_failureEmailSoonAfterCreation(self):
@@ -258,11 +223,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_failure_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_failureEmailSoonAfterCreation()
 
 
   def test_runEmailCheck_noEmailNewCreation(self):
@@ -286,11 +247,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_noEmailNewCreation()
 
 
   def test_runEmailCheck_noEmailOnRepeatedFailure(self):
@@ -310,11 +267,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_noEmailOnRepeatedFailure()
 
 
   def test_runEmailCheck_noEmailOnSinglePastFailureWithCurrentSuccess(self):
@@ -334,11 +287,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_noEmailOnSinglePastFailureWithCurrentSuccess()
 
 
   def test_runEmailCheck_noEmailOnRepeatedSuccess(self):
@@ -358,11 +307,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_noEmailOnRepeatedSuccess()
 
 
   def test_runEmailCheck_noEmailRightAfterCreation(self):
@@ -382,11 +327,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_no_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_noEmailRightAfterCreation()
 
 
   def test_runEmailCheck_successEmailAfterFailures(self):
@@ -406,12 +347,7 @@ class UtilityCodeTests( TestCase ):
     ## run check
     expected = 'send_success_email'
     result =  utility_code.runEmailCheck( s )
-    # logs = Log.objects.all()
-    # for entry in logs:
-    #   print '%s // %s' % ( entry.identifier, entry.log_message )
     self.assertTrue( expected == result, '\n Expected: ->%s<-; \nresult is: ->%s<-' % (expected, result,) )
-  # end def test_runEmailCheck_successEmailAfterFailures()
 
 
-# end class UtilityCodeTests
-
+## end class UtilityCodeTests()
