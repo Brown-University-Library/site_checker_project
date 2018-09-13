@@ -25,11 +25,14 @@ def checkSiteV2( site ):
     ## access site
     return_val = u'init'
     log.debug( u'- in uc.checkSiteV2(); trying site "%s" at "%s"' % (site.name, site.url) )
+    # try:
+    #   r = requests.get( site.url, timeout=30, verify=True )
+    #   log.debug( u'- in uc.checkSiteV2(); url attempted' )
     try:
-      # if type(site.url) == str:
-      #   log.debug( u'- in uc.checkSiteV2(); converted url from str to unicode' )
-      #   site.url = site.url.decode( u'utf-8', u'replace' )
-      r = requests.get( site.url, timeout=30, verify=True )
+      rqst_headers = requests.utils.default_headers()
+      default_agent = rqst_headers['User-Agent']
+      rqst_headers.update( {'User-Agent': '%s__%s' % ('bul_sitechecker', default_agent)} )
+      r = requests.get( site.url, headers=rqst_headers, timeout=30, verify=True )
       log.debug( u'- in uc.checkSiteV2(); url attempted' )
     except:
       message = makeErrorString()
