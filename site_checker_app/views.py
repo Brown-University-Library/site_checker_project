@@ -2,6 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from . import settings_app
+from .lib import version_helper
 from .lib.shib_auth import shib_login  # decorator
 from .models import CheckSite
 from django.conf import settings as project_settings
@@ -18,6 +19,9 @@ def info( request ):
         Getting this running shows that logging is working, and that the settings_app file is properly reading env-vars. """
     log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
     start = datetime.datetime.now()
+    commit = version_helper.get_commit()
+    branch = version_helper.get_branch()
+    info_txt = commit.replace( 'commit', branch )
     rtrn_dct = {
         'query': {
             'date_time': str( start ),
@@ -25,7 +29,7 @@ def info( request ):
         'response': {
             'documentation': settings_app.README_URL,
             'elapsed_time': str( datetime.datetime.now() - start ),
-            'message': 'ok' } }
+            'version': info_txt } }
     return HttpResponse( json.dumps(rtrn_dct, sort_keys=True, indent=2), content_type='application/javascript; charset=utf-8' )
 
 
