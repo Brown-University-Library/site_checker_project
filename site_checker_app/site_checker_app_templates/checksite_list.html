@@ -8,9 +8,9 @@ sitechecker &mdash; status
 
 {% block extra_css %}
 <style type="text/css">
-    p#count{
-        margin-top: 1em;
-        margin-bottom: 0;
+    #count{
+        margin-top: -1em;
+        margin-bottom: 1em;
     }
     table {
         margin-top: -.5em;
@@ -57,11 +57,11 @@ sitechecker &mdash; status
 
 <h1>sitechecker &mdash; service-status</h1>
 
-<p id="count"><strong>{{ object_list.count }} service-entries listed</strong></p>
+<!-- <p id="count"><strong>{{ object_list.count }} service-entries listed</strong></p> -->
 
 <table>
 
-    <!-- <caption>List of services and statuses...</caption> -->
+    <caption id="count"><strong>{{ object_list.count }} service-entries listed</strong></caption>
 
     <tr>
         <th>&nbsp;Service</th>
