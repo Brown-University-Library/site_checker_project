@@ -18,7 +18,7 @@ urlpatterns = [
     url( r'^login/$', views.login, name='admin_login_url' ),
 
     ## info urls
-    url( r'^error_check/$', views.info, name='error_check_url' ),
+    url( r'^error_check/$', views.error_check, name='error_check_url' ),
     url( r'^info/$', views.info, name='info_url' ),
 
     ## support urls

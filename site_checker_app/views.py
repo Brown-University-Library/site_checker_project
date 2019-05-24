@@ -14,25 +14,6 @@ from django.shortcuts import get_object_or_404, render
 log = logging.getLogger(__name__)
 
 
-def info( request ):
-    """ Returns basic info.
-        Getting this running shows that logging is working, and that the settings_app file is properly reading env-vars. """
-    log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
-    start = datetime.datetime.now()
-    commit = version_helper.get_commit()
-    branch = version_helper.get_branch()
-    info_txt = commit.replace( 'commit', branch )
-    rtrn_dct = {
-        'query': {
-            'date_time': str( start ),
-            'url': '{schm}://{hst}{uri}'.format( schm=request.scheme, hst=request.META['HTTP_HOST'], uri=request.META.get('REQUEST_URI', request.META['PATH_INFO']) ) },  # REQUEST_URI not available via run-server
-        'response': {
-            'documentation': settings_app.README_URL,
-            'elapsed_time': str( datetime.datetime.now() - start ),
-            'version': info_txt } }
-    return HttpResponse( json.dumps(rtrn_dct, sort_keys=True, indent=2), content_type='application/javascript; charset=utf-8' )
-
-
 def show_status( request ):
     """ Displays public status page. """
     site_data = CheckSite.objects.all().order_by( 'name' )
@@ -65,3 +46,35 @@ def bul_search( request ):
     log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
     redirect_url = 'https://search.library.brown.edu?%s' % request.META['QUERY_STRING']
     return HttpResponseRedirect( redirect_url )
+
+
+# ===========================
+# for development convenience
+# ===========================
+
+
+def info( request ):
+    """ Returns basic info.
+        Getting this running shows that logging is working, and that the settings_app file is properly reading env-vars. """
+    log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
+    start = datetime.datetime.now()
+    commit = version_helper.get_commit()
+    branch = version_helper.get_branch()
+    info_txt = commit.replace( 'commit', branch )
+    rtrn_dct = {
+        'query': {
+            'date_time': str( start ),
+            'url': '{schm}://{hst}{uri}'.format( schm=request.scheme, hst=request.META['HTTP_HOST'], uri=request.META.get('REQUEST_URI', request.META['PATH_INFO']) ) },  # REQUEST_URI not available via run-server
+        'response': {
+            'documentation': settings_app.README_URL,
+            'elapsed_time': str( datetime.datetime.now() - start ),
+            'version': info_txt } }
+    return HttpResponse( json.dumps(rtrn_dct, sort_keys=True, indent=2), content_type='application/javascript; charset=utf-8' )
+
+
+def error_check( request ):
+    """ For checking that admins receive error-emails. """
+    if project_settings.DEBUG == True:
+        1/0
+    else:
+        return HttpResponseNotFound( '<div>404 / Not Found</div>' )
