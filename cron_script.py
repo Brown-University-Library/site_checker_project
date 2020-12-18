@@ -11,8 +11,9 @@ Suggested calling mechanism from crontab...
 
 """
 
-import datetime, logging, os
+import datetime, logging, os, time
 import django
+from django import db
 
 ## set up django environment
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
@@ -34,6 +35,8 @@ def run_code():
     now_time = datetime.datetime.now()
     sites_to_check = utility_code.grabSitesToCheck( now_time )['query_set']
     utility_code.checkSites( sites_to_check )
+    db.close_old_connections()
+    time.sleep( .5 )
     return
 
 
