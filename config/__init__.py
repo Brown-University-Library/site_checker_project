@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
+# # -*- coding: utf-8 -*-
 
-try:
-    import pymysql
-    pymysql.install_as_MySQLdb()
-except ImportError:
-    pass
+# try:
+#     import pymysql
+#     pymysql.install_as_MySQLdb()
+# except ImportError:
+#     pass
