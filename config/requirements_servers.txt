@@ -1,0 +1,5 @@
+./config/mysqlclient-2.0.3-cp38-cp38-linux_x86_64.whl
+# PyMySQL==0.10.1
+Django==1.11.29
+git+https://github.com/birkin/shellvars-py.git
+requests==2.21.0
