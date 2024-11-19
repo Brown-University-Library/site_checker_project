@@ -11,13 +11,13 @@ Suggested calling mechanism from crontab...
 
 """
 
-import datetime
 import logging
 import os
 import time
 
 import django
 from django import db
+from django.utils import timezone
 
 ## set up django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -37,7 +37,8 @@ log = logging.getLogger(__name__)
 def run_code():
     """Calls site-checker code."""
     log.debug('starting check')
-    now_time = datetime.datetime.now()
+    # now_time = datetime.datetime.now()
+    now_time = timezone.now()
     sites_to_check = utility_code.grabSitesToCheck(now_time)['query_set']
     utility_code.checkSites(sites_to_check)
     db.close_old_connections()
