@@ -4,6 +4,7 @@ from django.contrib import admin
 from site_checker_app.models import CheckSite
 
 
+@admin.register(CheckSite)
 class CheckSiteAdmin( admin.ModelAdmin ):
     save_on_top = True
     list_display = [ 'name', 'partial_url', 'partial_text', 'recent_checked_result', 'recent_checked_time', 'email_addresses', 'next_check_time' ]
@@ -43,6 +44,9 @@ class CheckSiteAdmin( admin.ModelAdmin ):
         }),
     )
 
+    @admin.display(
+        description='url'
+    )
     def partial_url(self, obj):
         """ Specifies appearance of url in list_display. """
         p_url = ''
@@ -51,8 +55,10 @@ class CheckSiteAdmin( admin.ModelAdmin ):
         else:
             p_url = '%s...' % obj.url[0:47]
         return p_url
-    partial_url.short_description = 'url'
 
+    @admin.display(
+        description='text_expected'
+    )
     def partial_text(self, obj):
         """ Specifies appearance of text_expected in list_display. """
         expected = ''
@@ -61,9 +67,7 @@ class CheckSiteAdmin( admin.ModelAdmin ):
         else:
             expected = '%s...' % obj.text_expected[0:47]
         return expected
-    partial_text.short_description = 'text_expected'
 
     ## end class CheckSiteAdmin()
 
 
-admin.site.register( CheckSite, CheckSiteAdmin )

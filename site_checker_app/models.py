@@ -3,7 +3,7 @@
 import datetime, json, logging, os, pprint
 from . import settings_app
 from django.conf import settings as project_settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 

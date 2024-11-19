@@ -7,7 +7,7 @@ from .lib.shib_auth import shib_login  # decorator
 from .models import CheckSite
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
@@ -64,7 +64,7 @@ def info( request ):
     rtrn_dct = {
         'query': {
             'date_time': str( start ),
-            'url': '{schm}://{hst}{uri}'.format( schm=request.scheme, hst=request.META['HTTP_HOST'], uri=request.META.get('REQUEST_URI', request.META['PATH_INFO']) ) },  # REQUEST_URI not available via run-server
+            'url': '{schm}://{hst}{uri}'.format( schm=request.scheme, hst=request.headers['host'], uri=request.META.get('REQUEST_URI', request.META['PATH_INFO']) ) },  # REQUEST_URI not available via run-server
         'response': {
             'documentation': settings_app.README_URL,
             'elapsed_time': str( datetime.datetime.now() - start ),

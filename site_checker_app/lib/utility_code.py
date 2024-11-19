@@ -2,7 +2,7 @@
 
 import logging
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from site_checker_app import settings_app
 from site_checker_app.models import CheckSite
 
