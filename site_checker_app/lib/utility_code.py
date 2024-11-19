@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import sys
 
+import requests
+from django.core.mail import send_mail
 from django.urls import reverse
+from django.utils import timezone
 
 from site_checker_app import settings_app
 from site_checker_app.models import CheckSite
@@ -16,15 +20,9 @@ def checkSiteV2(site):
     - Called by: checkSites(), which is called from cronscript, and tests.UtilityCodeTests()
     """
     try:
-        ## setup
-        import requests
-
         log.debug('- in uc.checkSiteV2(); starting')
-        # from django.utils.encoding import smart_unicode
-        import datetime
-        import random
 
-        log_identifier = 'li_%s' % random.randint(1000, 9999)
+        # log_identifier = 'li_%s' % random.randint(1000, 9999)
         ## access site
         return_val = 'init'
         log.debug('- in uc.checkSiteV2(); trying site "%s" at "%s"' % (site.name, site.url))
@@ -37,7 +35,7 @@ def checkSiteV2(site):
             rqst_headers.update({'User-Agent': '%s__%s' % ('bul_sitechecker', default_agent)})
             r = requests.get(site.url, headers=rqst_headers, timeout=30, verify=True)
             log.debug('- in uc.checkSiteV2(); url attempted')
-        except:
+        except Exception:
             message = makeErrorString()
             log.error('- in uc.checkSiteV2(); error accessing url; error is: %s' % message)
             return_val = 'url_not_accessible'
@@ -47,7 +45,7 @@ def checkSiteV2(site):
             try:
                 html = r.content.decode('utf-8', 'replace')
                 log.debug('- in uc.checkSiteV2(); html perceived')
-            except:
+            except Exception:
                 message = makeErrorString()
                 log.error('- in uc.checkSiteV2(); error reading response; error is: %s' % message)
                 return_val = 'unable_to_read_response'
@@ -75,7 +73,8 @@ def checkSiteV2(site):
         site.pre_previous_checked_result = site.previous_checked_result
         site.previous_checked_result = site.recent_checked_result
         site.recent_checked_result = return_val
-        site.recent_checked_time = datetime.datetime.now()
+        # site.recent_checked_time = datetime.datetime.now()
+        site.recent_checked_time = timezone.now()
         site.save()
         log.debug(
             '- in uc.checkSiteV2(); site info, *after* update: pre_previous_checked_result - "%s"; previous_checked_result - "%s"; recent_checked_result - "%s"; recent_checked_time - "%s".'
@@ -88,7 +87,7 @@ def checkSiteV2(site):
         )
         ## return (return_val not read)
         return return_val
-    except:
+    except Exception:
         message = makeErrorString()
         log.error('- in uc.checkSiteV2(); main try exception; exception is: %s' % message)
         return_val = 'failure'
@@ -116,7 +115,7 @@ def checkSites(query_dict):
                 sendPassedEmail(site)
         log.debug('- in uc.checkSites(); --- checkSites() ending ---')
         return 'done'
-    except:
+    except Exception:
         error_message = '- in uc.checkSites(); error_message: %s' % makeErrorString()
         log.error(error_message)
         return error_message
@@ -130,47 +129,41 @@ def grabSitesToCheck(submitted_current_date):
     - Called by: cronscript.py, which then passes the sites list to checkSites()
     """
     try:
-        # from site_check_app.models import CheckSite
         log.debug('- in uc.grabSitesToCheck(); grabbing sites to check')
         query_set = CheckSite.objects.filter(next_check_time__lte=submitted_current_date)
         log.debug('- in uc.grabSitesToCheck(); number of records grabbed: %s' % (query_set.count(),))
         return {'query_set': query_set}
-    except:
+    except Exception:
         error_message = '- in uc.grabSitesToCheck(); error_message: %s' % makeErrorString()
         log.error(error_message)
         return error_message
 
 
-def hitSimpleAuth(username, password):
-    """
-    - Purpose: hit simple-auth webservice for authN.
-    - Called by: views.handleAdmin()
-    """
+# def hitSimpleAuth(username, password):
+#     """
+#     - Purpose: hit simple-auth webservice for authN.
+#     - Called by: views.handleAdmin()
+#     """
 
-    try:
-        import urllib
+#     try:
+#         url = '%ssimple_auth/' % settings_app.SIMPLE_AUTH_URL_SEGMENT
+#         parameter_dict = {
+#             'username': username,
+#             'password': password,
+#             'authorization_key': settings_app.SIMPLE_AUTH_AUTHORIZATION_KEY,
+#         }
+#         data = urllib.urlencode(parameter_dict)
+#         request = urllib2.Request(url, data)
+#         response = urllib2.urlopen(request)
+#         data = response.read()
+#         return_dict = simplejson.loads(data)
+#         return return_dict
+#     except Exception:
+#         message = '- in uc.hitSimpleAuth(); error is: %s' % makeErrorString()
+#         log.error(message)
+#         return {'status': 'failure'}
 
-        import urllib2
-        from django.utils import simplejson
-
-        url = '%ssimple_auth/' % settings_app.SIMPLE_AUTH_URL_SEGMENT
-        parameter_dict = {
-            'username': username,
-            'password': password,
-            'authorization_key': settings_app.SIMPLE_AUTH_AUTHORIZATION_KEY,
-        }
-        data = urllib.urlencode(parameter_dict)
-        request = urllib2.Request(url, data)
-        response = urllib2.urlopen(request)
-        data = response.read()
-        return_dict = simplejson.loads(data)
-        return return_dict
-    except:
-        message = '- in uc.hitSimpleAuth(); error is: %s' % makeErrorString()
-        log.error(message)
-        return {'status': 'failure'}
-
-    # end def hitSimpleAuth()
+#     # end def hitSimpleAuth()
 
 
 def makeErrorString():
@@ -178,7 +171,6 @@ def makeErrorString():
     - Purpose: to return detailed error information.
     - Called by: could be any exception block.
     """
-    import sys
 
     message = 'error-type - %s; error-message - %s; line-number - %s' % (
         sys.exc_info()[0],
@@ -291,8 +283,6 @@ def sendFailureEmail(site):
     - Called by: checkSites()
     """
     try:
-        from django.core.mail import send_mail
-
         admin_login_url = '%s%s' % (settings_app.CHECKER_URL_ROOT, reverse('admin_login_url'))
         subject = 'Service-Status alert: "%s" problem' % (site.name)
         message = build_failure_email_message(
@@ -361,8 +351,6 @@ def sendPassedEmail(site):
     - Called by: checkSites()
     """
     try:
-        from django.core.mail import send_mail
-
         subject = 'Service-Status alert: "%s" is ok now' % (site.name,)
         message = build_passed_email_message(site.name, site.check_frequency_number, site.check_frequency_unit)
         from_address = settings_app.EMAIL_FROM_ADDRESS
