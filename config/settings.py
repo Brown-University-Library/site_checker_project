@@ -12,7 +12,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import json, logging, os
+import json
+import logging
+import os
+import pathlib
+
+from dotenv import find_dotenv, load_dotenv
+
+## load envars ------------------------------------------------------
+dotenv_path = pathlib.Path(__file__).resolve().parent.parent.parent / '.env'
+assert dotenv_path.exists(), f'file does not exist, ``{dotenv_path}``'
+load_dotenv(find_dotenv(str(dotenv_path), raise_error_if_not_found=True), override=True)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,11 +35,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SITECHKR__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = json.loads( os.environ['SITECHKR__DEBUG_JSON'] )  # will be True or False
+DEBUG = json.loads(os.environ['SITECHKR__DEBUG_JSON'])  # will be True or False
 
-ADMINS = json.loads( os.environ['SITECHKR__ADMINS_JSON'] )
+ADMINS = json.loads(os.environ['SITECHKR__ADMINS_JSON'])
 
-ALLOWED_HOSTS = json.loads( os.environ['SITECHKR__ALLOWED_HOSTS'] )  # list
+ALLOWED_HOSTS = json.loads(os.environ['SITECHKR__ALLOWED_HOSTS'])  # list
 
 
 # Application definition
@@ -57,7 +67,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-template_dirs = json.loads( os.environ['SITECHKR__TEMPLATES_JSON'] )
+template_dirs = json.loads(os.environ['SITECHKR__TEMPLATES_JSON'])
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -80,7 +90,7 @@ WSGI_APPLICATION = 'config.passenger_wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = json.loads( os.environ['SITECHKR__DATABASES_JSON'] )
+DATABASES = json.loads(os.environ['SITECHKR__DATABASES_JSON'])
 
 
 # Password validation
@@ -126,7 +136,7 @@ STATIC_ROOT = os.environ['SITECHKR__STATIC_ROOT']  # needed for collectstatic co
 # Email
 SERVER_EMAIL = 'site_checker@library.brown.edu'
 EMAIL_HOST = os.environ['SITECHKR__EMAIL_HOST']
-EMAIL_PORT = int( os.environ['SITECHKR__EMAIL_PORT'] )
+EMAIL_PORT = int(os.environ['SITECHKR__EMAIL_PORT'])
 
 
 # sessions
@@ -142,45 +152,41 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ## disable module loggers
 # existing_logger_names = logging.getLogger().manager.loggerDict.keys()
 # print '- EXISTING_LOGGER_NAMES, `%s`' % existing_logger_names
-logging.getLogger('requests').setLevel( logging.WARNING )
+logging.getLogger('requests').setLevel(logging.WARNING)
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format': "[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s",
-            'datefmt': "%d/%b/%Y %H:%M:%S"
+            'format': '[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S',
         },
     },
     'handlers': {
         'logfile': {
-            'level':'DEBUG',
-            'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
-            'filename': os.environ.get(u'SITECHKR__LOG_PATH'),
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
+            'filename': os.environ.get('SITECHKR__LOG_PATH'),
             'formatter': 'standard',
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
-            'formatter': 'standard'
-        },
+        'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'standard'},
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
-        }
+        },
     },
     'loggers': {
         'site_checker_app': {
             'handlers': ['logfile', 'console'],
-            'level': os.environ.get(u'SITECHKR__LOG_LEVEL'),
-            'propagate': False
+            'level': os.environ.get('SITECHKR__LOG_LEVEL'),
+            'propagate': False,
         },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': False,
-        }
-    }
+        },
+    },
 }
