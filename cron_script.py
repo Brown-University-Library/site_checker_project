@@ -11,34 +11,39 @@ Suggested calling mechanism from crontab...
 
 """
 
-import datetime, logging, os, time
+import datetime
+import logging
+import os
+import time
+
 import django
 from django import db
 
 ## set up django environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 ## now django imports will work
 from site_checker_app.lib import utility_code
 
-
 logging.basicConfig(
     level=logging.DEBUG,
-    format='[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s', datefmt='%d/%b/%Y %H:%M:%S' )
+    format='[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s',
+    datefmt='%d/%b/%Y %H:%M:%S',
+)
 log = logging.getLogger(__name__)
 
 
 def run_code():
-    """ Calls site-checker code. """
-    log.debug( 'starting check' )
+    """Calls site-checker code."""
+    log.debug('starting check')
     now_time = datetime.datetime.now()
-    sites_to_check = utility_code.grabSitesToCheck( now_time )['query_set']
-    utility_code.checkSites( sites_to_check )
+    sites_to_check = utility_code.grabSitesToCheck(now_time)['query_set']
+    utility_code.checkSites(sites_to_check)
     db.close_old_connections()
-    time.sleep( .5 )
+    time.sleep(0.5)
     return
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run_code()
