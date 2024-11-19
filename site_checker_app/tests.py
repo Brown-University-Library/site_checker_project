@@ -20,14 +20,14 @@ class RootUrlTest(TestCase):
         """Checks '/root_url'."""
         response = self.client.get('')  # project root part of url is assumed
         self.assertEqual(302, response.status_code)  # non-permanent redirect
-        redirect_url = response._headers['location'][1]
+        redirect_url = response.headers['Location']  # Use the new `headers` property
         self.assertEqual('/status/', redirect_url)
 
     def test_root_url_slash(self):
         """Checks '/root_url/'."""
         response = self.client.get('/')  # project root part of url is assumed
         self.assertEqual(302, response.status_code)  # permanent redirect
-        redirect_url = response._headers['location'][1]
+        redirect_url = response.headers['Location']  # Use the new `headers` property
         self.assertEqual('/status/', redirect_url)
 
     # end class RootUrlTest()
