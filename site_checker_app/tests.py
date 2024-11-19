@@ -4,6 +4,7 @@ import datetime
 import logging
 
 from django.test import TestCase
+from django.utils import timezone
 
 from . import settings_app
 from .lib import utility_code
@@ -49,7 +50,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'not_applicable'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         ## check site
         utility_code.checkSiteV2(s)
         # expected = 'passed_though_non_unicode'
@@ -76,7 +77,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'problem with test-page'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         ## check site
         utility_code.checkSiteV2(s)
         expected = 'passed'
@@ -101,7 +102,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'problem with test-page'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         ## check site
         utility_code.checkSiteV2(s)
         expected = 'text_not_found'
@@ -140,14 +141,14 @@ class UtilityCodeTests(TestCase):
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'problem with test-page'
         # relevant for test...
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.check_frequency_number = 10
         s.check_frequency_unit = 'minute'
         s.recent_checked_result = 'passed'  # so that time_delta is calculated normally
         s.save()  # s.next_check_time is auto-calculated to be 10 minutes later
         ## test
-        test_datetime = datetime.datetime(
-            2007, 1, 15, 0, 5
+        test_datetime = timezone.make_aware(
+            datetime.datetime(2007, 1, 15, 0, 5)
         )  # 2007-01-15 00:05am; so should not be checked, because it's been only 5 minutes since last check
         query_set = utility_code.grabSitesToCheck(test_datetime)['query_set']
         expected = 0
@@ -171,14 +172,14 @@ class UtilityCodeTests(TestCase):
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'problem with test-page'
         # relevant for test...
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.check_frequency_number = 10
         s.check_frequency_unit = 'minute'
         s.recent_checked_result = 'passed'  # so that time_delta is calculated normally
         s.save()  # s.next_check_time is auto-calculated to be 10 minutes later
         ## test
-        test_datetime = datetime.datetime(
-            2007, 1, 15, 0, 12
+        test_datetime = timezone.make_aware(
+            datetime.datetime(2007, 1, 15, 0, 12)
         )  # 2007-01-15 00:12am; so should be checked, because it's been more than 10 minutes
         query_set = utility_code.grabSitesToCheck(test_datetime)['query_set']
         expected = 1
@@ -191,6 +192,37 @@ class UtilityCodeTests(TestCase):
                 result,
             ),
         )
+
+    # def test_grabSitesToCheck_retrieval(self):
+    #     ## make site that should *not* be retrieved
+    #     s = CheckSite()
+    #     # irrelevant for test...
+    #     s.name = 'abc123_test-page.title'
+    #     s.url = settings_app.TEST_SITE_URL_GOOD_HTML
+    #     s.text_expected = '<title>blahblah</title>'
+    #     s.email_addresses = settings_app.TEST_EMAIL
+    #     s.email_message = 'problem with test-page'
+    #     # relevant for test...
+    #     s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+    #     s.check_frequency_number = 10
+    #     s.check_frequency_unit = 'minute'
+    #     s.recent_checked_result = 'passed'  # so that time_delta is calculated normally
+    #     s.save()  # s.next_check_time is auto-calculated to be 10 minutes later
+    #     ## test
+    #     test_datetime = timezone.make_aware(datetime.datetime(
+    #         2007, 1, 15, 0, 12
+    #     )  # 2007-01-15 00:12am; so should be checked, because it's been more than 10 minutes
+    #     query_set = utility_code.grabSitesToCheck(test_datetime)['query_set']
+    #     expected = 1
+    #     result = query_set.count()
+    #     self.assertTrue(
+    #         expected == result,
+    #         '\n Expected: ->%s<-; \nresult is: ->%s<-'
+    #         % (
+    #             expected,
+    #             result,
+    #         ),
+    #     )
 
     ## parseEmailAddresses()
 
@@ -245,7 +277,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "success" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'url_not_accessible'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'url_not_accessible'
         s.pre_previous_checked_result = 'passed'
@@ -271,7 +303,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "failure" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'text_not_found'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'text_not_found'
         s.pre_previous_checked_result = 'init'
@@ -301,7 +333,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "failure" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'init'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'init'
         s.pre_previous_checked_result = 'init'
@@ -327,7 +359,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "success" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'url_not_accessible'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'url_not_accessible'
         s.pre_previous_checked_result = 'url_not_accessible'
@@ -353,7 +385,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "success" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'passed'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'url_not_accessible'
         s.pre_previous_checked_result = 'passed'
@@ -379,7 +411,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "success" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'passed'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'passed'
         s.pre_previous_checked_result = 'passed'
@@ -405,7 +437,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "failure" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'text_not_found'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'init'
         s.pre_previous_checked_result = 'init'
@@ -431,7 +463,7 @@ class UtilityCodeTests(TestCase):
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
         s.email_message = 'irrelevant -- but it would be some kind of "success" message'
-        s.recent_checked_time = datetime.datetime(2007, 1, 15)  # 2007-01-15, 00:00am
+        s.recent_checked_time = timezone.make_aware(datetime.datetime(2007, 1, 15))  # 2007-01-15, 00:00am
         s.recent_checked_result = 'passed'  # would be set from calling 'checkSite()'; this and following two statuses are what's being used to determine def response
         s.previous_checked_result = 'url_not_accessible'
         s.pre_previous_checked_result = 'url_not_accessible'

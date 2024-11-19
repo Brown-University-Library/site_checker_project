@@ -4,6 +4,7 @@ import datetime
 import logging
 
 from django.db import models
+from django.utils import timezone  # Import timezone
 
 from . import settings_app
 
@@ -60,10 +61,8 @@ class CheckSite(models.Model):
 
     def save(self):
         ## fill in recent_checked_time with current date if necessary
-        if self.recent_checked_time == None:
-            import datetime
-
-            self.recent_checked_time = datetime.datetime(2000, 1, 15)
+        if self.recent_checked_time is None:
+            self.recent_checked_time = timezone.make_aware(datetime.datetime(2000, 1, 15))
         ## update calculated_seconds
         self.calculated_seconds = self.createDeltaSeconds(self.check_frequency_number, self.check_frequency_unit)
         ## update next_check_time
