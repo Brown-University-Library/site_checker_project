@@ -81,7 +81,8 @@ class CheckSite(models.Model):
         minute_value = 60
         hour_value = minute_value * 60
         day_value = hour_value * 24
-        month_value = 365 / 12
+        # month_value = 365 / 12
+        month_value = day_value * (365 / 12)  # converts average month duration to seconds
         unit_dict = {'minute': minute_value, 'hour': hour_value, 'day': day_value, 'month': month_value}
         return unit_dict[unit_string] * frequency_integer
 
