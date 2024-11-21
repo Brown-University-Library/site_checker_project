@@ -1,4 +1,6 @@
 Django~=4.2.0
+pip
 python-dotenv~=1.0.0
 requests~=2.32.0
 urllib3~=1.26.0  # for downsteam compatibility
+uv
