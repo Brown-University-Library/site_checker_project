@@ -10,6 +10,11 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
+
+---
+
+Note: before using `python-dotenv` to load envars, all envars were prefixed by `SITECHKR__`
+    to avoid any conflicts with other projects' envars. We no longer need to do this, and can, over time, remove the prefix.
 """
 
 import json
@@ -38,7 +43,7 @@ SECRET_KEY = os.environ['SITECHKR__SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = json.loads(os.environ['SITECHKR__DEBUG_JSON'])  # will be True or False
 
-ADMINS = json.loads(os.environ['SITECHKR__ADMINS_JSON'])
+ADMINS = json.loads(os.environ['ADMINS_JSON'])  # `SITECHKR__` prefix removed for compatibility with self-updater script
 
 ALLOWED_HOSTS = json.loads(os.environ['SITECHKR__ALLOWED_HOSTS'])  # list
 
