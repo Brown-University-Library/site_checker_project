@@ -11,6 +11,6 @@ if __name__ == '__main__':
     with tempfile.TemporaryDirectory() as tmp:
         django.setup()
         TestRunner = get_runner(settings)
-        test_runner = TestRunner(verbosity=1, interactive=True)
+        test_runner = TestRunner(verbosity=1, interactive=True, keepdb=True)
         failures = test_runner.run_tests(['.'])
     sys.exit(failures)
