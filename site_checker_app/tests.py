@@ -72,7 +72,7 @@ class UtilityCodeTests(TestCase):
         s.url = settings_app.TEST_SITE_URL_GOOD_HTML  # page exists, with expected text
         log.debug('s.url, ``%s``' % s.url)
         # s.text_expected = 'Skip to events'
-        s.text_expected = 'site-checker test page'
+        s.text_expected = 'Featured collections'
         s.check_frequency_number = 1
         s.check_frequency_unit = 'minute'
         s.email_addresses = settings_app.TEST_EMAIL
