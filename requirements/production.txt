@@ -6,7 +6,7 @@ certifi==2024.12.14
     # via requests
 charset-normalizer==3.4.1
     # via requests
-django==4.2.17
+django==4.2.18
     # via -r requirements/base.in
 idna==3.10
     # via requests
@@ -22,11 +22,11 @@ sqlparse==0.5.3
     # via django
 typing-extensions==4.12.2 ; python_full_version < '3.11'
     # via asgiref
-tzdata==2024.2 ; sys_platform == 'win32'
+tzdata==2025.1 ; sys_platform == 'win32'
     # via django
 urllib3==1.26.20
     # via
     #   -r requirements/base.in
     #   requests
-uv==0.5.16
+uv==0.5.24
     # via -r requirements/base.in
