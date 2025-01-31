@@ -2,7 +2,7 @@ asgiref==3.8.1
     # via django
 backports-zoneinfo==0.2.1 ; python_full_version < '3.9'
     # via django
-certifi==2024.12.14
+certifi==2025.1.31
     # via requests
 charset-normalizer==3.4.1
     # via requests
@@ -28,5 +28,5 @@ urllib3==1.26.20
     # via
     #   -r requirements/base.in
     #   requests
-uv==0.5.25
+uv==0.5.26
     # via -r requirements/base.in
