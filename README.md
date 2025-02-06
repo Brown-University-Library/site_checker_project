@@ -18,4 +18,5 @@ If a failure is detected, the check frequency will reset to check again a couple
 
 An email doesn't go out on that first failure in case it's just some weird temporary blip. And once the site is back up, a 'back-up' email goes out, and the check-frequency returns to the normal user-specified frequency.
 
+dummy test
 ---
