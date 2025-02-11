@@ -28,5 +28,5 @@ urllib3==1.26.20
     # via
     #   -r requirements/base.in
     #   requests
-uv==0.5.29
+uv==0.5.30
     # via -r requirements/base.in
