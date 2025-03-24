@@ -18,7 +18,7 @@ requests==2.32.3
     # via -r requirements/base.in
 sqlparse==0.5.3
     # via django
-tzdata==2025.1 ; sys_platform == 'win32'
+tzdata==2025.2 ; sys_platform == 'win32'
     # via django
 urllib3==1.26.20
     # via
