@@ -209,7 +209,7 @@ def runEmailCheck(site):
         # Email logic...
         # - Don't send a failure email on the first fail -- it could be a momentary network issue.
         # - Since any failure will increase the check-frequency to (at least) every five minutes, send the failure email on the second failure.
-        # - To distinguish a second failure from repeated failues, the pre_previous_checked_result must be 'passed'.
+        # - To distinguish a second failure from repeated failures, the pre_previous_checked_result must be 'passed'.
         # - Success testing: send email on a pass where the previous two checks were failures (not on single previous failure to avoid temporary blips).
 
         # setup
