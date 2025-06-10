@@ -5,24 +5,22 @@ certifi==2025.1.31
 charset-normalizer==3.4.1
     # via requests
 django==4.2.20
-    # via -r requirements/base.in
+    # via -r base.in
 idna==3.10
     # via requests
 mysqlclient==2.1.1
-    # via -r requirements/staging.in
-pip==24.3.1
-    # via -r requirements/base.in
+    # via -r staging.in
 python-dotenv==1.0.1
-    # via -r requirements/base.in
-requests==2.32.3
-    # via -r requirements/base.in
+    # via -r base.in
+requests==2.32.4
+    # via -r base.in
 sqlparse==0.5.3
     # via django
-tzdata==2025.2 ; sys_platform == 'win32'
-    # via django
+typing-extensions==4.14.0
+    # via asgiref
 urllib3==1.26.20
     # via
-    #   -r requirements/base.in
+    #   -r base.in
     #   requests
 uv==0.5.31
-    # via -r requirements/base.in
+    # via -r base.in
