@@ -13,6 +13,7 @@ dependencies = [
 ]
 
 [dependency-groups]
+local = []
 staging = [
     "mysqlclient~=2.1.0",
 ]
