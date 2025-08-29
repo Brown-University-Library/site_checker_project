@@ -69,13 +69,10 @@ class CheckSiteAdmin( admin.ModelAdmin ):
         description='text_expected'
     )
     def partial_text(self, obj):
-        """ Specifies appearance of text_expected in list_display. """
-        expected = ''
-        if len(obj.text_expected) <= 50:
-            expected = obj.text_expected
-        else:
-            expected = '%s...' % obj.text_expected[0:47]
-        return expected
+        """Specifies appearance of text_expected in list_display."""
+        expected = obj.text_expected or ''
+        p_expected = expected if len(expected) <= 50 else f'{expected[:47]}...'
+        return p_expected
 
     ## end class CheckSiteAdmin()
 
