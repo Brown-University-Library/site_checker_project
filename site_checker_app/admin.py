@@ -4,6 +4,18 @@ from django.contrib import admin
 from site_checker_app.models import CheckSite
 
 
+class CheckSiteAdminForm(forms.ModelForm):
+    class Meta:
+        model = CheckSite
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make URL required in admin
+        if 'url' in self.fields:
+            self.fields['url'].required = True
+
+
 @admin.register(CheckSite)
 class CheckSiteAdmin( admin.ModelAdmin ):
     save_on_top = True
