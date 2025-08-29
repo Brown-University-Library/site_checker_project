@@ -60,12 +60,9 @@ class CheckSiteAdmin( admin.ModelAdmin ):
         description='url'
     )
     def partial_url(self, obj):
-        """ Specifies appearance of url in list_display. """
-        p_url = ''
-        if len(obj.url) <= 50:
-            p_url = obj.url
-        else:
-            p_url = '%s...' % obj.url[0:47]
+        """Specifies appearance of url in list_display."""
+        url = obj.url or ''
+        p_url = url if len(url) <= 50 else f'{url[:47]}...'
         return p_url
 
     @admin.display(
