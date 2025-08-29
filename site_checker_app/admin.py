@@ -13,7 +13,7 @@ class CheckSiteAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make URL required in admin
+        ## Make URL required in admin
         if 'url' in self.fields:
             self.fields['url'].required = True
 
@@ -71,7 +71,15 @@ class CheckSiteAdmin(admin.ModelAdmin):
                 ),
             },
         ),
-    )
+    )  # end fieldsets
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'url' and isinstance(formfield, forms.Field):
+            formfield.required = True
+        return formfield
+
+    ## end class CheckSiteAdmin()
 
     @admin.display(description='url')
     def partial_url(self, obj):
