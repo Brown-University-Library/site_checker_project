@@ -75,7 +75,7 @@ class CheckSiteAdmin(admin.ModelAdmin):
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'url' and isinstance(formfield, forms.Field):
+        if db_field.name in {'url', 'name'} and isinstance(formfield, forms.Field):
             formfield.required = True
         return formfield
 
