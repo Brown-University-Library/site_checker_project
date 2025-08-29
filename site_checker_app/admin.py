@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
 from django.contrib import admin
 
 from site_checker_app.models import CheckSite
 
 
-class CheckSiteAdminForm(forms.ModelForm):
-    class Meta:
-        model = CheckSite
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        ## Make URL required in admin
-        if 'url' in self.fields:
-            self.fields['url'].required = True
-
-
 @admin.register(CheckSite)
 class CheckSiteAdmin(admin.ModelAdmin):
+    REQUIRED_FIELDS = {
+        'name',
+        'url',
+        'text_expected',
+        'check_frequency_number',
+        'check_frequency_unit',
+        'email_addresses',
+    }  # required admin-only fields
+
     save_on_top = True
-    form = CheckSiteAdminForm
     list_display = [
         'name',
         'partial_url',
@@ -73,11 +68,13 @@ class CheckSiteAdmin(admin.ModelAdmin):
         ),
     )  # end fieldsets
 
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name in {'url', 'name'} and isinstance(formfield, forms.Field):
-            formfield.required = True
-        return formfield
+    def get_form(self, request, obj=None, **kwargs):
+        ## enforce required fields in admin form
+        form = super().get_form(request, obj, **kwargs)
+        for fname in self.REQUIRED_FIELDS:
+            if fname in form.base_fields:
+                form.base_fields[fname].required = True
+        return form
 
     ## end class CheckSiteAdmin()
 
