@@ -4,4 +4,5 @@ __pycache__
 .svn
 .venv
 *.pyc
+*/migrations/*.py
 env
