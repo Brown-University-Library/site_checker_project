@@ -8,7 +8,7 @@ dependencies = [
     "Django~=4.2.0",
     "python-dotenv~=1.0.0",
     "requests~=2.32.0",
-    "urllib3~=1.26.0"  # for downsteam compatibility
+    "urllib3~=2.6.3"  # for downsteam compatibility
 ]
 
 [dependency-groups]
