@@ -19,3 +19,6 @@ staging = [
 prod = [
     "mysqlclient~=2.1.0",
 ]
+
+[tool.uv]
+exclude-newer = "2 days"
