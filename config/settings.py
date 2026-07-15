@@ -102,8 +102,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = json.loads(os.environ['SITECHKR__DATABASES_JSON'])
+# DATABASES = json.loads(os.environ['SITECHKR__DATABASES_JSON'])
 
+DATABASES = {
+      "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": pathlib.Path(BASE_DIR) / "db.sqlite3",
+      }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
